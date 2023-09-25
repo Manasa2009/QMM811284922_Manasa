@@ -1,0 +1,117 @@
+---
+output:
+  html_document: default
+  pdf_document: default
+  word_document: default
+---
+Assignment 1, Manasa Pullabhatla, 811284922
+
+```{r}
+library("lpSolve")
+```
+
+A renowned chocolatier, Francesco Schröeder, makes three kinds of chocolate confectionery: artisanal truffles, handcrafted chocolate nuggets, and premium gourmet chocolate bars. He uses the highest quality of cacao butter, dairy cream, and honey as the main ingredients. Francesco makes his chocolates each morning, and they are usually sold out by the early afternoon. For a pound of artisanal truffles, Francesco uses 1 cup of cacao butter, 1 cup of honey, and 1/2 cup of cream. The handcrafted nuggets are milk chocolate and take 1/2 cup of cacao, 2/3 cup of honey, and 2/3 cup of cream for each pound. Each pound of the chocolate bars uses 1 cup of cacao butter, 1/2 cup of honey, and 1/2 cup of cream. One pound of truffles, nuggets, and chocolate bars can be purchased for $35, $25, and $20, respectively. A local store places a daily order of 10 pounds of chocolate nuggets, which means that Francesco needs to make at least 10 pounds of the chocolate nuggets each day. Before sunrise each day, Francesco receives a delivery of 50 cups of cacao butter, 50 cups of honey, and 30 cups of dairy cream.
+
+To formulate and solve the linear programming (LP) model for maximizing Francesco Schröeder's daily revenue while considering the constraints, we can use the following decision variables.\vspace{1mm}
+\newline
+***A - Truffles,***\vspace{1mm}
+\newline
+***B - Chocolate nuggets,***\vspace{1mm}
+\newline
+***C - Chocolate bars***\vspace{1mm}
+\newline
+
+***Objective Function***\vspace{1mm}
+\newline
+
+$$Max\hspace{1mm}Z = 35\hspace{1mm}A\hspace{1mm}+ 25\hspace{1mm}B+ 20\hspace{1mm}C $$
+Subject to the following constraints are \vspace{1mm}
+\newline
+X- Cacao Butter\vspace{1mm}
+\newline
+Y- Honey\vspace{1mm}
+\newline
+Z- Dairy cream\vspace{1mm}
+\newline
+
+*Francesco receives 50 cups of Cacao butter*
+
+$$X+\hspace{1mm}1/2Y+\hspace{1mm}Z\le50  $$
+*Francesco receives 50 cups of Honey*
+
+$$X+\hspace{1mm}2/3Y+\hspace{1mm}Z\le50  $$
+*Francesco receives 30 cups of Dairy Cream*
+
+$$X+\hspace{1mm}2/3Y+\hspace{1mm}1/2Z\le30  $$
+A local store places a daily order of 10 pounds of chocolate nuggets, which means that Francesco needs to make at least 10 pounds of the chocolate nuggets each day.
+
+$$B\ge10  $$
+Non-negativity constraints
+
+$$ X,\hspace{1mm}Y,\hspace{1mm}Z\ge0  $$
+
+Formulate and solve the LP model that maximizes revenue given the constraints. How much of each chocolate product should Francesco make each morning? What is the maximum daily revenue that he can make?
+```{r}
+f.obj <- c(35,25,20)
+
+f.con <- matrix(c(1,0.5,1,
+          1,2/3,0.5,
+          0.5,2/3,0.5,
+          0,1,0),
+          nrow=4, byrow=T)
+
+f.rhs <- c(50,50,30,10)
+ 
+f.dir <- c("<=","<=","<=",">=")
+
+lp("max",f.obj,f.con,f.dir,f.rhs)
+
+lp("max",f.obj,f.con,f.dir,f.rhs)$solution
+```
+
+Francesco Schröeder should make 40 pieces of artisanal truffles, 12 handcrafted chocolate nuggets, 4 premium gourmet chocolate bars in order to get the maximum profit/revenue i.e $1780.
+
+Report the shadow price and the range of feasibility of each binding constraint
+
+Objective Coefficient - Range of feasability (lower and upper bounds)
+```{r}
+lp("max",f.obj,f.con,f.dir,f.rhs,compute.sens=T)$sens.coef.from
+lp("max",f.obj,f.con,f.dir,f.rhs,compute.sens=T)$sens.coef.to
+```
+For the above optimization problem we could see that the lower bound can be max reached to 20.00, 22.50, 18.75 and the upper bound can be max set to 38.00000, 26.66667, 35.00000
+
+RHS Constraints - Range of feasability (lower and upper bounds)
+```{r}
+lp("max",f.obj,f.con,f.dir,f.rhs,compute.sens=T)$duals
+# duality of the above optimization problem
+```
+
+```{r}
+lp("max",f.obj,f.con,f.dir,f.rhs,compute.sens=T)$duals.from
+lp("max",f.obj,f.con,f.dir,f.rhs,compute.sens=T)$duals.to
+```
+
+If the local store increases the daily order to 25 pounds of chocolate nuggets, how much of each product should Francesco make?
+
+$$B\ge25  $$
+
+```{r}
+f.obj <- c(35,25,20)
+
+f.con <- matrix(c(1,0.5,1,
+          1,2/3,0.5,
+          0.5,2/3,0.5,
+          0,1,0),
+          nrow=4, byrow=T)
+
+f.rhs <- c(50,50,30,25)
+
+f.dir <- c("<=","<=","<=",">=")
+
+lp("max",f.obj,f.con,f.dir,f.rhs)
+
+lp("max",f.obj,f.con,f.dir,f.rhs)$solution
+```
+
+When the local stores want to increase their chocolate nuggets order to 25 pounds from 10 pounds. Francesco can make 26.67 truffles and 25 chocolate nuggets and he can attain a maximum revenue of $1558.33.
+
