@@ -1,0 +1,54 @@
+Assignment 2 Manasa Pullabhatla, 811284922
+
+
+---
+author: "Manasa"
+date: "2023-09-25"
+output: html_document
+---
+
+#Summary
+
+#In this minimization challenge, we are trying to lower the manufacturing and storage costs. Production in month i and installation in month j are represented by the variables Xij. In this case, production (supply) = 100 and installations (demand) = 70 are not equal.The essential principle of a transportation problem is to balance supply and demand, thus we create dummy variables and make alterations.
+#1. The primary objective of the issue is to lower total production and storage costs. We found that 77.3 is the absolute minimum needed for both production and storage. 
+#2. The term "sensitivity" refers to the range of values where the optimal solution is still relevant. 
+#3.The quantity of engines that must be manufactured before the end of each month is the main constraint in this issue. Restrictions on both supply and demand exist in this situation. We utilized the get constraints function to acquire the constraints in this linear programming issue.  We determined that the supply limitations were 25, 35, 30, and 10, and the demand restrictions were 10, 15, 25, 20, and 30. We determined the deciding elements at the optimum solution. The factors include maximizing productivity.
+
+#Decision Variables: 
+#Let Xij be the number of engines produced in month i and installed in month j.
+#Where:
+#i = 1,2,3,4 (representing the production months) j = 1,2,3,4 (representing the installation 
+#months)
+#Define Objective Function: 
+#The Objective is to minimize the total cost. Minimize ∑4
+#i=1 ∑4
+#j=1 cij xij Where cij represents 
+#  the cost per unit for production in month I and installing in month j
+
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+```{r}
+library(lpSolveAPI)
+
+
+x <-read.lp("C:/Users/Sailaja/Documents/QMM/inclass/inclass2.lp")
+x
+```
+```{r}
+solve(x)
+```
+```{r}
+get.objective(x)
+```
+```{r}
+get.variables(x)
+```
+```{r}
+get.constraints(x)
+```
+```{r}
+get.sensitivity.rhs(x)
+```
